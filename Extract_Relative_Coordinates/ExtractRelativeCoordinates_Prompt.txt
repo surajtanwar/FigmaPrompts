@@ -1,0 +1,54 @@
+You are given a Figma API JSON response.
+
+Your task is to extract all nodes that belong to each screen (FRAME), and calculate the position of each node relative to its parent screen.
+
+Assumptions:
+- Each screen (FRAME) has size 1080x1920
+- Each node contains an "absoluteBoundingBox" with x, y, width, height
+- Each screen (FRAME) also has its own "absoluteBoundingBox"
+
+For each node inside a FRAME:
+1. Identify its parent FRAME
+2. Get:
+   - node.absoluteBoundingBox (nodeX, nodeY)
+   - frame.absoluteBoundingBox (frameX, frameY)
+
+3. Calculate relative position:
+   relativeX = nodeX - frameX
+   relativeY = nodeY - frameY
+
+4. Also calculate center coordinates:
+   centerX = relativeX + width/2
+   centerY = relativeY + height/2
+
+Output format (JSON):
+For each node, return:
+{
+  "frame_name": "<frame name>",
+  "node_name": "<node name>",
+  "node_id": "<node id>",
+  "relative_position": {
+    "x": relativeX,
+    "y": relativeY
+  },
+  "center_position": {
+    "x": centerX,
+    "y": centerY
+  },
+  "size": {
+    "width": width,
+    "height": height
+  }
+}
+
+Rules:
+- Ignore nodes without absoluteBoundingBox
+- Only include nodes inside FRAME type screens
+- Preserve hierarchy if needed
+- Ensure coordinates are integers (round if needed)
+
+Goal:
+Produce clean, structured data that can be directly used for:
+- CLICK_COORDS automation
+- UI test case generation
+- Screen-relative interaction mapping
